@@ -7,7 +7,7 @@ class Config:
     RDS_DB_NAME = os.environ.get('RDS_DB_NAME')
     RDS_USERNAME = os.environ.get('RDS_USERNAME')
     RDS_PASSWORD = os.environ.get('RDS_PASSWORD')
-    DATABASE_URL = os.environ.get('DATABASE_URL', "postgresql://postgres:mysecretpassword@blacklistdb.cgbywy6689hb.us-east-1.rds.amazonaws.com")
+    DATABASE_URL = os.environ.get('DATABASE_URL', "postgresql://postgres:mysecretpassword@blacklistdb.cgbywy6689hb.us-east-1.rds.amazonaws.com:5432/postgres")
 
     if RDS_HOSTNAME:
         SQLALCHEMY_DATABASE_URI = f"postgresql://{RDS_USERNAME}:{RDS_PASSWORD}@{RDS_HOSTNAME}:{RDS_PORT}/{RDS_DB_NAME}"
