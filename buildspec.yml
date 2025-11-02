@@ -20,6 +20,7 @@ phases:
 
   pre_build:
     commands:
+      - rm -f Dockerrun.aws.json || true
       - echo "Agregando el directorio actual al PYTHONPATH..."
       - export PYTHONPATH=$PYTHONPATH:$(pwd)
       - echo "Ejecutando pruebas unitarias..."
