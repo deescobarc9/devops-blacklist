@@ -54,4 +54,5 @@ phases:
 
 artifacts:
   files:
-    - Dockerfile
+    - '**/*'
+  discard-paths: yes
