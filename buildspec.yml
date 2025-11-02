@@ -20,6 +20,8 @@ phases:
 
   pre_build:
     commands:
+      - echo "Agregando el directorio actual al PYTHONPATH..."
+      - export PYTHONPATH=$PYTHONPATH:$(pwd)
       - echo "Ejecutando pruebas unitarias..."
       - pytest --maxfail=1 --disable-warnings -q
 
