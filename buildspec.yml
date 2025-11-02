@@ -1,9 +1,55 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGE_REPO_NAME: "devops-blacklist"
+    IMAGE_TAG: "latest"
+    AWS_DEFAULT_REGION: "us-east-1"
+    ACCOUNT_ID: "039781381219"
+
 phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "Instalando dependencias para pruebas..."
+      - pip install -r requirements.txt
+      - pip install pytest pytest-cov
+      - echo "Iniciando sesión en ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+
   pre_build:
     commands:
-      - pip install -r requirements.txt
+      - echo "Ejecutando pruebas unitarias..."
+      - pytest --maxfail=1 --disable-warnings -q
+
+  build:
+    commands:
+      - echo "Construyendo imagen Docker..."
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG ${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo "Subiendo imagen a ECR..."
+      - docker push ${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo "Creando archivo Dockerrun.aws.json para Beanstalk..."
+      - |
+        cat > Dockerrun.aws.json <<EOF
+        {
+          "AWSEBDockerrunVersion": 1,
+          "Image": {
+            "Name": "${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG",
+            "Update": "true"
+          },
+          "Ports": [
+            {
+              "ContainerPort": 5000
+            }
+          ]
+        }
+        EOF
+
 artifacts:
   files:
-    - '**/*'
+    - Dockerrun.aws.json
