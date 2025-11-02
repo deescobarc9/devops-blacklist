@@ -39,5 +39,14 @@ phases:
 
 artifacts:
   files:
-    - '**/*'
-  discard-paths: yes
+    - Dockerfile
+    - Dockerrun.aws.json
+    - main.py
+    - application.py
+    - config.py
+    - extensions.py
+    - requirements.txt
+    - generate_token.py
+    - setup_db.sql
+    - models/**/*
+    - resources/**/*
