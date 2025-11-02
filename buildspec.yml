@@ -54,4 +54,4 @@ phases:
 
 artifacts:
   files:
-    - Dockerrun.aws.json
+    - Dockerfile
