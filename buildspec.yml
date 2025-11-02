@@ -36,22 +36,6 @@ phases:
     commands:
       - echo "Subiendo imagen a ECR..."
       - docker push ${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - echo "Creando archivo Dockerrun.aws.json para Beanstalk..."
-      - |
-        cat > Dockerrun.aws.json <<EOF
-        {
-          "AWSEBDockerrunVersion": 1,
-          "Image": {
-            "Name": "${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG",
-            "Update": "true"
-          },
-          "Ports": [
-            {
-              "ContainerPort": 5000
-            }
-          ]
-        }
-        EOF
 
 artifacts:
   files:
