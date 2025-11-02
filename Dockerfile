@@ -1,5 +1,5 @@
 # Imagen base
-FROM python:3.11-slim
+FROM 039781381219.dkr.ecr.us-east-1.amazonaws.com/python-base:3.11-slim
 
 # Variables de entorno
 ENV PYTHONDONTWRITEBYTECODE=1
