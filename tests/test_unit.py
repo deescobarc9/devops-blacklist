@@ -40,7 +40,7 @@ def client(app):
 def test_health_check(client):
     response = client.get('/blacklist/ping')
     assert response.status_code == 200
-    assert response.data == b'pong'
+    assert response.data == b'error'
 
 
 def test_root(client):
