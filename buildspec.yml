@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_REPO_NAME: "devops-blacklist"
+    IMAGE_REPO_NAME: "devops-blacklist-deploy"
     IMAGE_TAG: "latest"
     AWS_DEFAULT_REGION: "us-east-1"
     ACCOUNT_ID: "039781381219"
@@ -36,6 +36,10 @@ phases:
     commands:
       - echo "Subiendo imagen a ECR..."
       - docker push ${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo Writing Image Definitions file...
+      - printf '[{"name":"devops-blacklist-deploy","imageUri":"${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"}]' > imagedefinitions.json
+      - printf '{"ImageURI":"${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"}' > imageDetail.json
+      - cat imagedefinitions.json
 
 artifacts:
   files:
@@ -50,3 +54,14 @@ artifacts:
     - setup_db.sql
     - models/**/*
     - resources/**/*
+    - '**/*'
+    - imagedefinitions.json
+    - imageDetail.json
+  secondary-artifacts:
+    DefinitionArtifact:
+      files:
+        - appspec.yaml
+        - taskdef.json
+    ImageArtifact:
+      files:
+        - imageDetail.json

@@ -1,0 +1,34 @@
+{
+    "taskDefinition": "task-app-blacklist:2",
+    "cluster": "cluster-blacklist",
+    "loadBalancers": [
+        {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:039781381219:targetgroup/target-group-blacklist-1/5a20f44578300283",
+            "containerName": "blacklist-app",
+            "containerPort": 5000
+        },
+        {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:039781381219:targetgroup/target-group-blacklist-2/2b8cbac51a25defd",
+            "containerName": "blacklist-app",
+            "containerPort": 5000
+        }
+    ],
+    "desiredCount": 1,
+    "launchType": "FARGATE",
+    "schedulingStrategy": "REPLICA",
+    "deploymentController": {
+        "type": "CODE_DEPLOY"
+    },
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": [
+                "subnet-07804ec63a5d3b88c",
+                "subnet-09859f3cce0d6dc9a"
+            ],
+            "securityGroups": [
+                "sg-0252def68df35554e"
+            ],
+            "assignPublicIp": "ENABLED"
+        }
+    }
+}
